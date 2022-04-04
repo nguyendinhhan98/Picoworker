@@ -1,5 +1,6 @@
 import {
   Body,
+  ClassSerializerInterceptor,
   Controller,
   Delete,
   Get,
@@ -9,8 +10,14 @@ import {
   Param,
   Post,
   Put,
+  UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { ApiParam, ApiTags } from '@nestjs/swagger';
+import { Roles } from 'src/core/decorator/roles.decorator';
+import { Constants } from 'src/core/enum/constants.enum';
+import { JwtOAuthGuard } from 'src/core/guard/jwt.guard';
+import { RolesGuard } from 'src/core/guard/roles.guard';
 import { DeleteResult, UpdateResult } from 'typeorm';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
@@ -28,6 +35,9 @@ export class UserController {
     this.userRepository.save(user);
   }
 
+  @UseInterceptors(ClassSerializerInterceptor)
+  @UseGuards(JwtOAuthGuard, RolesGuard)
+  @Roles([Constants.IS_ADMIN])
   @HttpCode(HttpStatus.OK)
   @Get()
   async getUsers(): Promise<IUserEntity[]> {
@@ -35,6 +45,8 @@ export class UserController {
     return users;
   }
 
+  @UseInterceptors(ClassSerializerInterceptor)
+  @UseGuards(JwtOAuthGuard)
   @Get(':id')
   @ApiParam({
     name: 'id',
@@ -49,6 +61,7 @@ export class UserController {
     return user;
   }
 
+  @UseGuards(JwtOAuthGuard)
   @Put(':id')
   @ApiParam({
     name: 'id',
@@ -62,6 +75,8 @@ export class UserController {
     return this.userRepository.update(params.id, updateUserDto);
   }
 
+  @UseGuards(JwtOAuthGuard, RolesGuard)
+  @Roles([Constants.IS_ADMIN])
   @Delete(':id')
   @ApiParam({
     name: 'id',

@@ -1,14 +1,19 @@
 import { Module } from '@nestjs/common';
-import { AppService } from './app.service';
 import { UserModule } from './modules/user/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ApiConfigService } from './shared/services/api-config.service';
 import { SharedModule } from './shared/shared.module';
 import { ConfigModule } from '@nestjs/config';
+import { AuthModule } from './modules/auth/auth.module';
+import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
+import { RolesGuard } from './core/guard/roles.guard';
+import { ResponseInterceptor } from './core/interceptor/response.interceptor';
+import { MailModule } from './modules/mail/mail.module';
 
 @Module({
   imports: [
     UserModule,
+    AuthModule,
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: '.env',
@@ -18,9 +23,19 @@ import { ConfigModule } from '@nestjs/config';
       useFactory: (config: ApiConfigService) => config.mysqlConfig,
       inject: [ApiConfigService],
     }),
+    MailModule,
     // SharedModule,
   ],
   controllers: [],
-  providers: [AppService],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: ResponseInterceptor,
+    },
+  ],
 })
 export class AppModule {}
