@@ -2,8 +2,8 @@ import { ValidationError, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { AppModule } from './app.module';
-import { GlobalExceptionFilter } from './core/filter/global-exception.filter';
-import { ValidationException } from './core/filter/validation.exception';
+import { GlobalExceptionFilter } from './core/filters/global-exception.filter';
+import { ValidationException } from './core/filters/validation.exception';
 import { setupSwagger } from './setup-swagger';
 
 async function bootstrap() {

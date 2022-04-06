@@ -9,7 +9,7 @@ import {
 import { ApiTags } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { AuthGuard } from '@nestjs/passport';
-import { UpdateUserPasswordDto } from '../user/dtos/update_user_password.dto';
+import { UpdateUserPasswordDto } from '../user/dtos/update-user-password.dto';
 
 @Controller('auth')
 @ApiTags('auth')

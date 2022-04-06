@@ -9,7 +9,7 @@ TableName = h.TableName(name);
 IEntityName = h.IEntityName(name);
 entityName = h.EntityName(name);
 
-%>import { AbstractEntity } from 'src/common/abstract.entity';
+%>import { AbstractEntity } from '../../common/abstract.entity';
 import { Column, Entity } from 'typeorm';
 
 export interface <%= IEntityName %> {

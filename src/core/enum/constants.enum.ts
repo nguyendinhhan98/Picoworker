@@ -6,5 +6,5 @@ export enum Constants {
 
 export enum JWTConfig {
   JWT_SECRET = 'PICOWORKER',
-  JWT_EXPIRES_IN = '60s',
+  JWT_EXPIRES_IN = '3600s',
 }

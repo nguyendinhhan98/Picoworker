@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { ClassSerializerInterceptor, Module } from '@nestjs/common';
 import { UserModule } from './modules/user/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ApiConfigService } from './shared/services/api-config.service';
@@ -6,8 +6,8 @@ import { SharedModule } from './shared/shared.module';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './modules/auth/auth.module';
 import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
-import { RolesGuard } from './core/guard/roles.guard';
-import { ResponseInterceptor } from './core/interceptor/response.interceptor';
+import { RolesGuard } from './core/guards/roles.guard';
+import { ResponseInterceptor } from './core/interceptors/response.interceptor';
 import { MailModule } from './modules/mail/mail.module';
 
 @Module({
@@ -35,6 +35,10 @@ import { MailModule } from './modules/mail/mail.module';
     {
       provide: APP_INTERCEPTOR,
       useClass: ResponseInterceptor,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: ClassSerializerInterceptor,
     },
   ],
 })

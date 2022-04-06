@@ -1,6 +1,5 @@
 import {
   Body,
-  ClassSerializerInterceptor,
   Controller,
   Delete,
   Get,
@@ -11,13 +10,12 @@ import {
   Post,
   Put,
   UseGuards,
-  UseInterceptors,
 } from '@nestjs/common';
 import { ApiParam, ApiTags } from '@nestjs/swagger';
-import { Roles } from 'src/core/decorator/roles.decorator';
+import { Roles } from 'src/core/decorators/roles.decorator';
 import { Constants } from 'src/core/enum/constants.enum';
-import { JwtOAuthGuard } from 'src/core/guard/jwt.guard';
-import { RolesGuard } from 'src/core/guard/roles.guard';
+import { JwtOAuthGuard } from 'src/core/guards/jwt.guard';
+import { RolesGuard } from 'src/core/guards/roles.guard';
 import { DeleteResult, UpdateResult } from 'typeorm';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
@@ -35,7 +33,6 @@ export class UserController {
     this.userRepository.save(user);
   }
 
-  @UseInterceptors(ClassSerializerInterceptor)
   @UseGuards(JwtOAuthGuard, RolesGuard)
   @Roles([Constants.IS_ADMIN])
   @HttpCode(HttpStatus.OK)
@@ -45,7 +42,6 @@ export class UserController {
     return users;
   }
 
-  @UseInterceptors(ClassSerializerInterceptor)
   @UseGuards(JwtOAuthGuard)
   @Get(':id')
   @ApiParam({
@@ -72,7 +68,11 @@ export class UserController {
     @Param() params,
     @Body() updateUserDto: UpdateUserDto,
   ): Promise<UpdateResult> {
-    return this.userRepository.update(params.id, updateUserDto);
+    const user = await this.userRepository.findOne(params.id);
+    if (!user) {
+      throw new NotFoundException('User not exists');
+    }
+    return await this.userRepository.update(params.id, updateUserDto);
   }
 
   @UseGuards(JwtOAuthGuard, RolesGuard)
@@ -84,6 +84,10 @@ export class UserController {
   })
   @HttpCode(HttpStatus.ACCEPTED)
   async deleteUser(@Param() params): Promise<DeleteResult> {
+    const user = await this.userRepository.findOne(params.id);
+    if (!user) {
+      throw new NotFoundException('User not exists');
+    }
     return this.userRepository.delete(params.id);
   }
 }

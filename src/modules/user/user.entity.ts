@@ -1,7 +1,7 @@
-import { AbstractEntity } from 'src/common/abstract.entity';
-import { BeforeInsert, Column, Entity } from 'typeorm';
+import { AbstractEntity } from '../../common/abstract.entity';
+import { BeforeInsert, BeforeUpdate, Column, Entity } from 'typeorm';
 import * as bcrypt from 'bcrypt';
-import { Constants } from 'src/core/enum/constants.enum';
+import { Constants } from '../../core/enum/constants.enum';
 import { Exclude } from 'class-transformer';
 
 export interface IUserEntity {
@@ -33,7 +33,7 @@ export class UserEntity extends AbstractEntity implements IUserEntity {
   @Column()
   password: string;
 
-  constructor(partial: Partial<UserEntity>) {
+  constructor(partial?: Partial<UserEntity>) {
     super();
     Object.assign(this, partial);
   }
@@ -42,6 +42,7 @@ export class UserEntity extends AbstractEntity implements IUserEntity {
   role?: string;
 
   @BeforeInsert()
+  @BeforeUpdate()
   async hasPassword() {
     this.password = await bcrypt.hash(this.password, 10);
   }
