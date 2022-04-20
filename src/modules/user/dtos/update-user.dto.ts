@@ -1,32 +1,25 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsOptional, IsString } from 'class-validator';
+import { IsNotEmpty, IsString, Matches } from 'class-validator';
 
 export class UpdateUserDto {
-  @ApiProperty()
-  @IsOptional()
-  firstName?: string;
-
-  @ApiProperty()
-  @IsOptional()
-  lastName?: string;
-
-  @IsString()
-  @IsOptional()
+  @IsNotEmpty()
+  @Matches(/^[a-zA-Z]+[a-zA-Z0-9\s]*$/, {
+    message: 'Tên của user, chỉ được phép nhập string, số và dấu cách.',
+  })
   fullName: string;
 
+  @IsNotEmpty()
   @IsString()
-  @IsOptional()
+  @Matches(/^[a-zA-Z0-9_]*$/, {
+    message: 'Biệt danh của user, chỉ được phép nhập string, số và ký tự _',
+  })
   username: string;
 
   @IsString()
-  @IsOptional()
-  email: string;
-
-  @IsString()
-  @IsOptional()
+  @IsNotEmpty()
   region: string;
 
-  @IsString()
-  @IsOptional()
+  @IsNotEmpty()
+  @ApiProperty()
   role: string;
 }

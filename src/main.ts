@@ -16,13 +16,32 @@ async function bootstrap() {
     new ValidationPipe({
       skipMissingProperties: false,
       exceptionFactory: (errors: ValidationError[]) => {
-        const messages = errors.map((error) => {
-          return {
-            field: error.property,
-            message: Object.values(error.constraints).join(','),
-          };
+        const errorMessages = [];
+        errors.forEach((error) => {
+          if (!error.children.length) {
+            errorMessages.push({
+              field: error.property,
+              message: Object.values(error.constraints)[0],
+            });
+          } else {
+            error.children.forEach((nestedError) => {
+              if (!nestedError.children.length) {
+                errorMessages.push({
+                  field: nestedError.property,
+                  message: Object.values(nestedError.constraints)[0],
+                });
+              } else {
+                nestedError.children.forEach((nestedOfNestedError) => {
+                  errorMessages.push({
+                    field: nestedOfNestedError.property,
+                    message: Object.values(nestedOfNestedError.constraints)[0],
+                  });
+                });
+              }
+            });
+          }
         });
-        return new ValidationException(messages);
+        return new ValidationException(errorMessages);
       },
     }),
   );

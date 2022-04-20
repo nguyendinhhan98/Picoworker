@@ -34,7 +34,7 @@ export class CreateUserDto {
   region: string;
 
   @Matches(
-    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,64}$/,
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()])[A-Za-z\d!@#$%^&*()]{8,64}$/,
     {
       message:
         'Mật khẩu của user, minLength là 8, maxLength là 64, mật khẩu phải bao gồm ký tự thường, ký tự hoa, số và ký tự đặc biêt.',
@@ -46,5 +46,5 @@ export class CreateUserDto {
 
   @IsNotEmpty()
   @ApiProperty()
-  role?: string;
+  role: string;
 }
