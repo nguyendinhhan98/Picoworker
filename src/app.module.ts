@@ -9,11 +9,13 @@ import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { RolesGuard } from './core/guards/roles.guard';
 import { ResponseInterceptor } from './core/interceptors/response.interceptor';
 import { MailModule } from './modules/mail/mail.module';
+import { CategoryModule } from './modules/category/category.module';
 
 @Module({
   imports: [
     UserModule,
     AuthModule,
+    CategoryModule,
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: '.env',
