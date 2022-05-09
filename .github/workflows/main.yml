@@ -1,0 +1,55 @@
+# This is a basic workflow to help you get started with Actions
+
+name: [RSDN.UIT] Picoworkers CI
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the main branch
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  test:
+    name: Test
+    runs-on: self-hosted
+    steps:
+    - name: checkout code
+      uses: actions/checkout@v1
+
+    - name: who am ii?
+      run: whoami
+
+    - run: curl -sL https://rpm.nodesource.com/setup_14.x | bash -
+    - run: yum install -y nodejs
+    - run: node --version
+    - run: rm -rf node_modules
+    - name: install denpendences
+      run: npm install
+
+    - name: eslint
+      run: npm run lint
+  build:
+    name: Build
+    runs-on: self-hosted
+    needs: ["test"]
+    if: github.ref == 'refs/heads/main'
+    steps:
+    - run: node --version
+    - name: Setup environment variable
+      run: echo "VUE_APP_API_URL=https://checkin.runsystem.info/v2/api" >> .env
+    - run: ls -al
+    - run: export NEST_OUTPUT_PATH="/var/www/html/rsdn_tool/public/demo" && npm run build
+  deploy:
+    name: Deploy
+    runs-on: self-hosted
+    needs: ["build"]
+    if: github.ref == 'refs/heads/main'
+    steps:
+    - run: npm run migration:run
+    - run: echo deploy successful
