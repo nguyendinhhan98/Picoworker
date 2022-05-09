@@ -20,7 +20,7 @@ jobs:
     runs-on: self-hosted
     steps:
     - name: checkout code
-      uses: actions/checkout@v1
+      uses: actions/checkout@v3
 
     - name: who am ii?
       run: whoami
@@ -41,10 +41,10 @@ jobs:
     if: github.ref == 'refs/heads/main'
     steps:
     - run: node --version
-    - name: Setup environment variable
-      run: echo "VUE_APP_API_URL=https://checkin.runsystem.info/v2/api" >> .env
     - run: ls -al
-    - run: export NEST_OUTPUT_PATH="/var/www/html/rsdn_tool/public/demo" && npm run build
+    - run: |
+        npm run build --if-present
+        npm test
   deploy:
     name: Deploy
     runs-on: self-hosted
