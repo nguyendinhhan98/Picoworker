@@ -57,5 +57,5 @@ jobs:
     - name: migration database
       run: npm run migration:run
     - run: |
-       #pm2 start ecosystem.config.js
+       pm2 start ecosystem.config.js
        echo deploy successful
