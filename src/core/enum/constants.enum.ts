@@ -1,7 +1,12 @@
-export enum Constants {
+export enum ROLES {
   IS_ADMIN = 'ADMIN',
   IS_WORKER = 'WORKER',
   IS_EMPLOYER = 'EMPLOYER',
+}
+
+export enum REGIST_ROLES {
+  WORKER = 'WORKER',
+  EMPLOYER = 'EMPLOYER',
 }
 
 export enum JWTConfig {

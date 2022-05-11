@@ -1,7 +1,7 @@
 import { AbstractEntity } from '../../common/abstract.entity';
 import { BeforeInsert, BeforeUpdate, Column, Entity } from 'typeorm';
 import * as bcrypt from 'bcrypt';
-import { Constants } from '../../core/enum/constants.enum';
+import { ROLES } from '../../core/enum/constants.enum';
 import { Exclude } from 'class-transformer';
 
 export interface IUserEntity {
@@ -38,7 +38,7 @@ export class UserEntity extends AbstractEntity implements IUserEntity {
     Object.assign(this, partial);
   }
 
-  @Column({ default: Constants.IS_ADMIN })
+  @Column({ default: ROLES.IS_ADMIN })
   role?: string;
 
   @BeforeInsert()

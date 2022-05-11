@@ -44,29 +44,6 @@ export class AuthService {
     }
   }
 
-  async forgotPassword(body: {
-    token_refresh: string;
-    password: string;
-    password_confirm: string;
-  }) {
-    try {
-      const user = this.jwtService.verify(body.token_refresh);
-      if (user) {
-        const userData = await this.userRepository.getUserByEmail(user.email);
-        await this.userRepository.resetPassword(userData.id, {
-          token_refresh: body.token_refresh,
-          password: body.password,
-          password_confirm: body.password_confirm,
-        });
-        return {
-          message: 'Đổi mật khẩu thành công',
-        };
-      }
-    } catch (error) {
-      throw new UnauthorizedException('Link đã hết hạn');
-    }
-  }
-
   async sendMail(body: { email: string }) {
     const user = await this.userRepository.getUserByEmail(body.email);
     const new_token = await this.jwtService.signAsync({

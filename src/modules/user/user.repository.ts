@@ -1,7 +1,7 @@
 import { EntityRepository, Repository } from 'typeorm';
-import { UpdateUserPasswordDto } from './dtos/update-user-password.dto';
 import { UserEntity } from './user.entity';
 import * as bcrypt from 'bcrypt';
+import { JwtService } from '@nestjs/jwt';
 
 @EntityRepository(UserEntity)
 export class UserRepository extends Repository<UserEntity> {
@@ -15,7 +15,15 @@ export class UserRepository extends Repository<UserEntity> {
     return user;
   }
 
-  async resetPassword(id: string, body: UpdateUserPasswordDto) {
-    await this.update(id, { password: await bcrypt.hash(body.password, 10) });
+  async resetPassword(id: string, password: string) {
+    await this.update(id, { password: await bcrypt.hash(password, 10) });
+  }
+
+  async changePassword(email: string, password: string) {
+    const userData = await this.getUserByEmail(email);
+    await this.resetPassword(userData.id, password);
+    return {
+      message: 'Đổi mật khẩu thành công',
+    };
   }
 }

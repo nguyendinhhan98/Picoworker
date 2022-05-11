@@ -1,13 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString, Matches } from 'class-validator';
+import { IsNotEmpty, Matches } from 'class-validator';
 import { Match } from 'src/core/validators/match.decorator';
 
 export class UpdateUserPasswordDto {
-  @IsNotEmpty()
-  @IsString()
-  @ApiProperty()
-  token_refresh: string;
-
   @Matches(
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,64}$/,
     {
@@ -16,11 +11,11 @@ export class UpdateUserPasswordDto {
     },
   )
   @IsNotEmpty()
-  @ApiProperty()
+  @ApiProperty({ type: String })
   password: string;
 
   @IsNotEmpty()
   @Match('password')
-  @ApiProperty()
+  @ApiProperty({ type: String })
   password_confirm: string;
 }

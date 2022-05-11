@@ -12,13 +12,13 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { DeleteResult, Like, UpdateResult } from 'typeorm';
 import { CreateCountryDto } from './dtos/create-country.dto';
 import { UpdateCountryDto } from './dtos/update-country.dto';
 import { ICountryEntity } from './country.entity';
 import { CountryRepository } from './country.repository';
-import { Constants } from '../../core/enum/constants.enum';
+import { ROLES } from '../../core/enum/constants.enum';
 import { JwtOAuthGuard } from '../../core/guards/jwt.guard';
 import { RolesGuard } from '../../core/guards/roles.guard';
 import { Roles } from '../../core/decorators/roles.decorator';
@@ -28,8 +28,9 @@ import { Roles } from '../../core/decorators/roles.decorator';
 export class CountryController {
   constructor(private countryRepository: CountryRepository) {}
 
+  @ApiBearerAuth()
   @UseGuards(JwtOAuthGuard, RolesGuard)
-  @Roles([Constants.IS_ADMIN])
+  @Roles([ROLES.IS_ADMIN])
   @Post()
   @HttpCode(HttpStatus.CREATED)
   async createCountry(@Body() createCountryDto: CreateCountryDto) {
@@ -37,7 +38,8 @@ export class CountryController {
     this.countryRepository.save(country);
   }
 
-  @UseGuards(JwtOAuthGuard, RolesGuard)
+  @ApiBearerAuth()
+  @UseGuards(JwtOAuthGuard)
   @HttpCode(HttpStatus.OK)
   @Get()
   @ApiQuery({
@@ -52,7 +54,8 @@ export class CountryController {
     });
   }
 
-  @UseGuards(JwtOAuthGuard, RolesGuard)
+  @ApiBearerAuth()
+  @UseGuards(JwtOAuthGuard)
   @Get(':id')
   @ApiParam({
     name: 'id',
@@ -67,8 +70,9 @@ export class CountryController {
     return country;
   }
 
+  @ApiBearerAuth()
   @UseGuards(JwtOAuthGuard, RolesGuard)
-  @Roles([Constants.IS_ADMIN])
+  @Roles([ROLES.IS_ADMIN])
   @Put(':id')
   @ApiParam({
     name: 'id',
@@ -82,8 +86,9 @@ export class CountryController {
     return this.countryRepository.update(params.id, updateCountryDto);
   }
 
+  @ApiBearerAuth()
   @UseGuards(JwtOAuthGuard, RolesGuard)
-  @Roles([Constants.IS_ADMIN])
+  @Roles([ROLES.IS_ADMIN])
   @Delete(':id')
   @ApiParam({
     name: 'id',

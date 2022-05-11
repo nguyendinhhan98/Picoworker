@@ -2,7 +2,6 @@ import {
   ArgumentsHost,
   Catch,
   ExceptionFilter,
-  Global,
   HttpException,
   HttpStatus,
   Logger,

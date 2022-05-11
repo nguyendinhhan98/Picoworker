@@ -15,13 +15,13 @@ export class CreateCountryDto {
   @IsString()
   @MinLength(3)
   @MaxLength(255)
-  @ApiProperty()
+  @ApiProperty({ type: String })
   name: string;
 
   @IsNotEmpty()
   @IsArray()
   @ArrayMinSize(1)
   @IsEnum(TargetZone, { each: true })
-  @ApiProperty()
+  @ApiProperty({ type: String })
   targetZone: TargetZone[];
 }

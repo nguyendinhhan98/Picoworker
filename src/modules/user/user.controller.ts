@@ -1,24 +1,16 @@
 import {
   Body,
   Controller,
-  Delete,
   Get,
   HttpCode,
   HttpStatus,
-  NotFoundException,
-  Param,
   Post,
-  Put,
+  Request,
   UseGuards,
 } from '@nestjs/common';
-import { ApiParam, ApiTags } from '@nestjs/swagger';
-import { Roles } from 'src/core/decorators/roles.decorator';
-import { Constants } from 'src/core/enum/constants.enum';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtOAuthGuard } from 'src/core/guards/jwt.guard';
-import { RolesGuard } from 'src/core/guards/roles.guard';
-import { DeleteResult, UpdateResult } from 'typeorm';
-import { CreateUserDto } from './dtos/create-user.dto';
-import { UpdateUserDto } from './dtos/update-user.dto';
+import { UpdateUserPasswordDto } from './dtos/update-user-password.dto';
 import { IUserEntity } from './user.entity';
 import { UserRepository } from './user.repository';
 
@@ -26,68 +18,26 @@ import { UserRepository } from './user.repository';
 @ApiTags('user')
 export class UserController {
   constructor(private userRepository: UserRepository) {}
-  @Post()
-  @HttpCode(HttpStatus.CREATED)
-  async createUser(@Body() createUserDto: CreateUserDto) {
-    const user = this.userRepository.create(createUserDto);
-    this.userRepository.save(user);
-  }
 
-  @UseGuards(JwtOAuthGuard, RolesGuard)
-  @Roles([Constants.IS_ADMIN])
+  @UseGuards(JwtOAuthGuard)
+  @ApiBearerAuth()
+  @Get('/info')
   @HttpCode(HttpStatus.OK)
-  @Get()
-  async getUsers(): Promise<IUserEntity[]> {
-    const users = await this.userRepository.find();
-    return users;
+  async getInfoUser(@Request() req): Promise<IUserEntity> {
+    return await this.userRepository.getUserByEmail(req.user.email);
   }
 
   @UseGuards(JwtOAuthGuard)
-  @Get(':id')
-  @ApiParam({
-    name: 'id',
-    required: true,
-  })
-  @HttpCode(HttpStatus.OK)
-  async getUser(@Param() params): Promise<IUserEntity> {
-    const user = await this.userRepository.findOne(params.id);
-    if (!user) {
-      throw new NotFoundException('User not exists');
-    }
-    return user;
-  }
-
-  @UseGuards(JwtOAuthGuard)
-  @Put(':id')
-  @ApiParam({
-    name: 'id',
-    required: true,
-  })
+  @ApiBearerAuth()
+  @Post('/change-password')
   @HttpCode(HttpStatus.ACCEPTED)
-  async updateUser(
-    @Param() params,
-    @Body() updateUserDto: UpdateUserDto,
-  ): Promise<UpdateResult> {
-    const user = await this.userRepository.findOne(params.id);
-    if (!user) {
-      throw new NotFoundException('User not exists');
-    }
-    return await this.userRepository.update(params.id, updateUserDto);
-  }
-
-  @UseGuards(JwtOAuthGuard, RolesGuard)
-  @Roles([Constants.IS_ADMIN])
-  @Delete(':id')
-  @ApiParam({
-    name: 'id',
-    required: true,
-  })
-  @HttpCode(HttpStatus.ACCEPTED)
-  async deleteUser(@Param() params): Promise<DeleteResult> {
-    const user = await this.userRepository.findOne(params.id);
-    if (!user) {
-      throw new NotFoundException('User not exists');
-    }
-    return this.userRepository.delete(params.id);
+  async changePassword(
+    @Body() updateUserPasswordDto: UpdateUserPasswordDto,
+    @Request() req,
+  ) {
+    return this.userRepository.changePassword(
+      req.user.email,
+      updateUserPasswordDto.password,
+    );
   }
 }

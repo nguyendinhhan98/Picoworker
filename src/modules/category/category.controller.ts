@@ -11,13 +11,13 @@ import {
   Put,
   UseGuards,
 } from '@nestjs/common';
-import { ApiParam, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiParam, ApiTags } from '@nestjs/swagger';
 import { DeleteResult, UpdateResult } from 'typeorm';
 import { CreateCategoryDto } from './dtos/create-category.dto';
 import { UpdateCategoryDto } from './dtos/update-category.dto';
 import { ICategoryEntity } from './category.entity';
 import { CategoryRepository } from './category.repository';
-import { Constants } from '../../core/enum/constants.enum';
+import { ROLES } from '../../core/enum/constants.enum';
 import { JwtOAuthGuard } from '../../core/guards/jwt.guard';
 import { RolesGuard } from '../../core/guards/roles.guard';
 import { Roles } from '../../core/decorators/roles.decorator';
@@ -27,8 +27,9 @@ import { Roles } from '../../core/decorators/roles.decorator';
 export class CategoryController {
   constructor(private categoryRepository: CategoryRepository) {}
 
+  @ApiBearerAuth()
   @UseGuards(JwtOAuthGuard, RolesGuard)
-  @Roles([Constants.IS_ADMIN])
+  @Roles([ROLES.IS_ADMIN])
   @Post()
   @HttpCode(HttpStatus.CREATED)
   async createCategory(@Body() createCategoryDto: CreateCategoryDto) {
@@ -37,7 +38,8 @@ export class CategoryController {
     this.categoryRepository.save(category);
   }
 
-  @UseGuards(JwtOAuthGuard, RolesGuard)
+  @ApiBearerAuth()
+  @UseGuards(JwtOAuthGuard)
   @HttpCode(HttpStatus.OK)
   @Get()
   async getAllCategory(): Promise<ICategoryEntity[]> {
@@ -49,7 +51,8 @@ export class CategoryController {
     });
   }
 
-  @UseGuards(JwtOAuthGuard, RolesGuard)
+  @ApiBearerAuth()
+  @UseGuards(JwtOAuthGuard)
   @Get(':id')
   @ApiParam({
     name: 'id',
@@ -64,8 +67,9 @@ export class CategoryController {
     return category;
   }
 
+  @ApiBearerAuth()
   @UseGuards(JwtOAuthGuard, RolesGuard)
-  @Roles([Constants.IS_ADMIN])
+  @Roles([ROLES.IS_ADMIN])
   @Put(':id')
   @ApiParam({
     name: 'id',
@@ -79,8 +83,9 @@ export class CategoryController {
     return this.categoryRepository.update(params.id, updateCategoryDto);
   }
 
+  @ApiBearerAuth()
   @UseGuards(JwtOAuthGuard, RolesGuard)
-  @Roles([Constants.IS_ADMIN])
+  @Roles([ROLES.IS_ADMIN])
   @Delete(':id')
   @ApiParam({
     name: 'id',

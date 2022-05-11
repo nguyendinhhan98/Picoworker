@@ -12,14 +12,14 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { ApiParam, ApiTags } from '@nestjs/swagger';
+import { ApiParam, ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { DeleteResult } from 'typeorm';
 import { CreateJobDto } from './dtos/create-job.dto';
 import { UpdateJobDto } from './dtos/update-job.dto';
 import { SearchJobDto } from './dtos/search-job.dto';
 import { IJobEntity } from './job.entity';
 import { JobRepository } from './job.repository';
-import { Constants } from '../../core/enum/constants.enum';
+import { ROLES } from '../../core/enum/constants.enum';
 import { JwtOAuthGuard } from '../../core/guards/jwt.guard';
 import { RolesGuard } from '../../core/guards/roles.guard';
 import { Roles } from '../../core/decorators/roles.decorator';
@@ -34,8 +34,9 @@ export class JobController {
   ) {}
 
   @UseGuards(JwtOAuthGuard, RolesGuard)
-  @Roles([Constants.IS_ADMIN, Constants.IS_EMPLOYER])
-  @Post()
+  @Roles([ROLES.IS_ADMIN, ROLES.IS_EMPLOYER])
+  @ApiBearerAuth()
+  @Post('create')
   @HttpCode(HttpStatus.CREATED)
   async createJob(@Body() createJobDto: CreateJobDto) {
     const countries = await this.countryRepository.findByIds(
@@ -46,12 +47,16 @@ export class JobController {
     await this.jobRepository.save(job);
   }
 
+  @UseGuards(JwtOAuthGuard)
+  @ApiBearerAuth()
   @HttpCode(HttpStatus.OK)
-  @Get()
+  @Post('list')
   async getAllJob(@Body() searchJobDto?: SearchJobDto): Promise<any> {
     return this.jobRepository.listPagination(searchJobDto);
   }
 
+  @UseGuards(JwtOAuthGuard)
+  @ApiBearerAuth()
   @Get(':id')
   @ApiParam({
     name: 'id',
@@ -69,7 +74,8 @@ export class JobController {
   }
 
   @UseGuards(JwtOAuthGuard, RolesGuard)
-  @Roles([Constants.IS_ADMIN, Constants.IS_EMPLOYER])
+  @Roles([ROLES.IS_ADMIN, ROLES.IS_EMPLOYER])
+  @ApiBearerAuth()
   @Put(':id')
   @ApiParam({
     name: 'id',
@@ -93,7 +99,8 @@ export class JobController {
   }
 
   @UseGuards(JwtOAuthGuard, RolesGuard)
-  @Roles([Constants.IS_ADMIN, Constants.IS_EMPLOYER])
+  @Roles([ROLES.IS_ADMIN, ROLES.IS_EMPLOYER])
+  @ApiBearerAuth()
   @Delete(':id')
   @ApiParam({
     name: 'id',

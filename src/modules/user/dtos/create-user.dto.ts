@@ -1,5 +1,6 @@
 import {
   IsEmail,
+  IsEnum,
   IsNotEmpty,
   IsString,
   Matches,
@@ -7,19 +8,22 @@ import {
   MinLength,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { REGIST_ROLES } from '../../../core/enum/constants.enum';
 
 export class CreateUserDto {
   @IsNotEmpty()
   @Matches(/^[a-zA-Z]+[a-zA-Z0-9\s]*$/, {
     message: 'Tên của user, chỉ được phép nhập string, số và dấu cách.',
   })
+  @IsString()
+  @ApiProperty({ type: String })
   fullName: string;
 
   @MinLength(6)
   @MaxLength(64)
   @IsEmail()
   @IsNotEmpty()
-  @ApiProperty()
+  @ApiProperty({ type: String })
   email: string;
 
   @IsNotEmpty()
@@ -27,10 +31,12 @@ export class CreateUserDto {
   @Matches(/^[a-zA-Z0-9_]*$/, {
     message: 'Biệt danh của user, chỉ được phép nhập string, số và ký tự _',
   })
+  @ApiProperty({ type: String })
   username: string;
 
   @IsString()
   @IsNotEmpty()
+  @ApiProperty({ type: String })
   region: string;
 
   @Matches(
@@ -41,10 +47,12 @@ export class CreateUserDto {
     },
   )
   @IsNotEmpty()
-  @ApiProperty()
+  @IsString()
+  @ApiProperty({ type: String })
   password: string;
 
   @IsNotEmpty()
-  @ApiProperty()
+  @IsEnum(REGIST_ROLES)
+  @ApiProperty({ enum: REGIST_ROLES })
   role: string;
 }

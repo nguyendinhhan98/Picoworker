@@ -46,7 +46,7 @@ export class UpdateJobDto {
   @IsOptional()
   @ArrayMinSize(1)
   @ArrayMaxSize(4)
-  @ApiProperty({ type: [Object] })
+  @ApiProperty({ type: [ProofsRequired] })
   @ValidateNested({ each: true })
   @Type(() => ProofsRequired)
   proofsRequired?: any[];
@@ -118,7 +118,7 @@ export class UpdateJobDto {
 
   @IsOptional()
   @IsBoolean()
-  @ApiProperty()
+  @ApiProperty({ type: Boolean })
   pauseAfterApproval?: boolean;
 
   @IsOptional()

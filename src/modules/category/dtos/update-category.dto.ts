@@ -6,6 +6,6 @@ export class UpdateCategoryDto {
   @IsString()
   @MinLength(3)
   @MaxLength(255)
-  @ApiProperty()
+  @ApiProperty({ type: String })
   name?: string;
 }

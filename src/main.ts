@@ -8,8 +8,15 @@ import { setupSwagger } from './setup-swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  app.enableCors({
+    origin: true,
+    methods: 'GET, HEAD, PUT, PATCH, POST, DELETE, OPTIONS',
+    credentials: true,
+  });
   app.setViewEngine('hbs');
-  app.setGlobalPrefix('api');
+  app.setGlobalPrefix('api', {
+    exclude: ['auth/login', 'auth/register', 'auth/forgot-password'],
+  });
   setupSwagger(app);
   app.useGlobalFilters(new GlobalExceptionFilter());
   app.useGlobalPipes(

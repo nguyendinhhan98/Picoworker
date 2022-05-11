@@ -1,25 +1,31 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString, Matches } from 'class-validator';
+import { IsEnum, IsOptional, IsString, Matches } from 'class-validator';
+import { REGIST_ROLES } from '../../../core/enum/constants.enum';
 
 export class UpdateUserDto {
-  @IsNotEmpty()
+  @IsOptional()
   @Matches(/^[a-zA-Z]+[a-zA-Z0-9\s]*$/, {
     message: 'Tên của user, chỉ được phép nhập string, số và dấu cách.',
   })
-  fullName: string;
+  @IsString()
+  @ApiProperty({ type: String })
+  fullName?: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   @Matches(/^[a-zA-Z0-9_]*$/, {
     message: 'Biệt danh của user, chỉ được phép nhập string, số và ký tự _',
   })
-  username: string;
+  @ApiProperty({ type: String })
+  username?: string;
 
   @IsString()
-  @IsNotEmpty()
-  region: string;
+  @IsOptional()
+  @ApiProperty({ type: String })
+  region?: string;
 
-  @IsNotEmpty()
-  @ApiProperty()
-  role: string;
+  @IsOptional()
+  @IsEnum(REGIST_ROLES)
+  @ApiProperty({ enum: REGIST_ROLES })
+  role?: string;
 }

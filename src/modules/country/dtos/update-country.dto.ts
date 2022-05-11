@@ -15,13 +15,13 @@ export class UpdateCountryDto {
   @IsString()
   @MinLength(3)
   @MaxLength(255)
-  @ApiProperty()
-  name: string;
+  @ApiProperty({ type: String })
+  name?: string;
 
   @IsArray()
   @ArrayMinSize(1)
   @IsEnum(TargetZone, { each: true })
-  @ApiProperty()
+  @ApiProperty({ type: String })
   @IsOptional()
-  targetZone: TargetZone[];
+  targetZone?: TargetZone[];
 }

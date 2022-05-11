@@ -13,7 +13,7 @@ export class ProofsRequired {
   @IsString()
   @MinLength(3)
   @MaxLength(255)
-  @ApiProperty()
+  @ApiProperty({ type: String })
   proof: string;
 
   @IsNotEmpty()

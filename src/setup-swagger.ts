@@ -5,8 +5,11 @@ export function setupSwagger(app: INestApplication): void {
   const documentBuilder = new DocumentBuilder()
     .setTitle('API')
     .setDescription('Picoworker swagger API')
-    .addBearerAuth();
-
+    .addBearerAuth({
+      type: 'http',
+      scheme: 'bearer',
+      bearerFormat: 'Bearer',
+    });
   if (process.env.API_VERSION) {
     documentBuilder.setVersion(process.env.API_VERSION);
   }

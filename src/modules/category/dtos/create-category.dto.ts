@@ -14,11 +14,11 @@ export class CreateCategoryDto {
   @IsString()
   @MinLength(3)
   @MaxLength(255)
-  @ApiProperty()
+  @ApiProperty({ type: String })
   name: string;
 
   @Exists(CategoryEntity)
-  @ApiProperty()
+  @ApiProperty({ type: String })
   @IsUUID('4')
   @IsOptional()
   parentId?: string;

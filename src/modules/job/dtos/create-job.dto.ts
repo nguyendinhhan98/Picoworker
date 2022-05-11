@@ -46,7 +46,7 @@ export class CreateJobDto {
   @IsNotEmpty()
   @ArrayMinSize(1)
   @ArrayMaxSize(4)
-  @ApiProperty({ type: [Object] })
+  @ApiProperty({ type: [ProofsRequired] })
   @ValidateNested({ each: true })
   @Type(() => ProofsRequired)
   proofsRequired: ProofsRequired[];
@@ -117,7 +117,7 @@ export class CreateJobDto {
 
   @IsNotEmpty()
   @IsBoolean()
-  @ApiProperty()
+  @ApiProperty({ type: Boolean })
   pauseAfterApproval: boolean;
 
   @IsNotEmpty()
