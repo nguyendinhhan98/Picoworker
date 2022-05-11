@@ -55,7 +55,7 @@ export class CreateTableJob1650425492069 implements MigrationInterface {
             isNullable: false,
           },
           {
-            name: 'location',
+            name: 'target_zone',
             type: 'varchar',
             isNullable: false,
           },

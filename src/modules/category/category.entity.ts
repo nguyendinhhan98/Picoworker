@@ -1,5 +1,6 @@
 import { AbstractEntity } from '../../common/abstract.entity';
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
+import { JobEntity } from '../job/job.entity';
 
 export interface ICategoryEntity {
   id: string;
@@ -21,4 +22,7 @@ export class CategoryEntity extends AbstractEntity implements ICategoryEntity {
 
   @OneToMany(() => CategoryEntity, (category) => category.parent)
   children: CategoryEntity[];
+
+  @OneToMany(() => JobEntity, (job) => job.category)
+  jobs: JobEntity[];
 }

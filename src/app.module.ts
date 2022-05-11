@@ -10,14 +10,16 @@ import { RolesGuard } from './core/guards/roles.guard';
 import { ResponseInterceptor } from './core/interceptors/response.interceptor';
 import { MailModule } from './modules/mail/mail.module';
 import { CategoryModule } from './modules/category/category.module';
-import { LocationModule } from './modules/location/location.module';
+import { CountryModule } from './modules/country/country.module';
+import { JobModule } from './modules/job/job.module';
 
 @Module({
   imports: [
     UserModule,
     AuthModule,
     CategoryModule,
-    LocationModule,
+    CountryModule,
+    JobModule,
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: '.env',
