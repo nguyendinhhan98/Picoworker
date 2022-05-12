@@ -1,12 +1,18 @@
 import { AbstractEntity } from '../../common/abstract.entity';
 import { BeforeInsert, BeforeUpdate, Column, Entity } from 'typeorm';
 import * as bcrypt from 'bcrypt';
-import { ROLES } from '../../core/enum/constants.enum';
+import { REGIST_ROLES, ROLES } from '../../core/enum/constants.enum';
 import { Exclude } from 'class-transformer';
 
 export interface IUserEntity {
   firstName?: string;
   lastName?: string;
+  fullName: string;
+  username: string;
+  region: string;
+  email: string;
+  password: string;
+  role: string;
 }
 
 @Entity({ name: 'users' })
@@ -38,8 +44,8 @@ export class UserEntity extends AbstractEntity implements IUserEntity {
     Object.assign(this, partial);
   }
 
-  @Column({ default: ROLES.IS_ADMIN })
-  role?: string;
+  @Column({ default: REGIST_ROLES.WORKER })
+  role: string;
 
   @BeforeInsert()
   @BeforeUpdate()

@@ -35,9 +35,6 @@ export class UserController {
     @Body() updateUserPasswordDto: UpdateUserPasswordDto,
     @Request() req,
   ) {
-    return this.userRepository.changePassword(
-      req.user.email,
-      updateUserPasswordDto.password,
-    );
+    return this.userRepository.changePassword(req.user, updateUserPasswordDto);
   }
 }

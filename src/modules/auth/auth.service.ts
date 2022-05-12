@@ -29,12 +29,12 @@ export class AuthService {
   }
 
   async generateJwtToken(body: { email: string }) {
-    let userData: any;
     try {
-      userData = await this.userRepository.getUserByEmail(body.email);
+      const user = await this.userRepository.getUserByEmail(body.email);
       const token = await this.jwtService.signAsync({
-        email: userData.email,
-        password: userData.password,
+        email: user.email,
+        password: user.password,
+        id: user.id,
       });
       return {
         token,
@@ -49,6 +49,7 @@ export class AuthService {
     const new_token = await this.jwtService.signAsync({
       email: user.email,
       password: user.password,
+      id: user.id,
     });
 
     await this.mailService.sendUserConfirmation(user, new_token);

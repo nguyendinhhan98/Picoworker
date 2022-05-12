@@ -1,29 +1,36 @@
 import { EntityRepository, Repository } from 'typeorm';
 import { UserEntity } from './user.entity';
 import * as bcrypt from 'bcrypt';
-import { JwtService } from '@nestjs/jwt';
-
 @EntityRepository(UserEntity)
 export class UserRepository extends Repository<UserEntity> {
   async getUserByEmail(email: string) {
-    const user = await this.findOneOrFail({
+    return this.findOneOrFail({
       where: {
         email: email,
       },
     });
-
-    return user;
   }
 
-  async resetPassword(id: string, password: string) {
-    await this.update(id, { password: await bcrypt.hash(password, 10) });
+  async getUserById(id: string) {
+    return this.findOneOrFail({ id });
   }
 
-  async changePassword(email: string, password: string) {
-    const userData = await this.getUserByEmail(email);
-    await this.resetPassword(userData.id, password);
+  async resetPassword(id: string, newPassword: string) {
+    const password = await bcrypt.hash(newPassword, 10);
+    return this.update(id, { password });
+  }
+
+  async changePassword({ id, password }, { currentPassword, newPassword }) {
+    const isMatch = await bcrypt.compareSync(currentPassword, password);
+    if (isMatch) {
+      const user = await this.getUserById(id);
+      await this.resetPassword(user.id, newPassword);
+      return {
+        message: 'Đổi mật khẩu thành công',
+      };
+    }
     return {
-      message: 'Đổi mật khẩu thành công',
+      message: 'Mật khẩu hiện tại không đúng',
     };
   }
 }
