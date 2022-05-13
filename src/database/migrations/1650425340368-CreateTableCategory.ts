@@ -1,4 +1,9 @@
-import { MigrationInterface, QueryRunner, Table } from 'typeorm';
+import {
+  MigrationInterface,
+  QueryRunner,
+  Table,
+  TableForeignKey,
+} from 'typeorm';
 
 export class CreateTableCategory1650425340368 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
@@ -41,6 +46,14 @@ export class CreateTableCategory1650425340368 implements MigrationInterface {
         ],
       }),
     );
+
+    const categoryForeignKey = new TableForeignKey({
+      columnNames: ['parent_id'],
+      referencedColumnNames: ['id'],
+      referencedTableName: 'categories',
+      onDelete: 'CASCADE',
+    });
+    await queryRunner.createForeignKey('categories', categoryForeignKey);
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
