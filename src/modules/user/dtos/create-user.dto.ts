@@ -9,6 +9,8 @@ import {
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { REGIST_ROLES } from '../../../core/enum/constants.enum';
+import { Duplicated } from 'src/core/validators/duplicate.decorator';
+import { UserEntity } from '../user.entity';
 
 export class CreateUserDto {
   @IsNotEmpty()
@@ -19,6 +21,7 @@ export class CreateUserDto {
   @ApiProperty({ type: String })
   fullName: string;
 
+  @Duplicated(UserEntity)
   @MinLength(6)
   @MaxLength(64)
   @IsEmail()
