@@ -124,7 +124,7 @@ export class CreateTableJob1650425492069 implements MigrationInterface {
     await queryRunner.createForeignKey('jobs', categoryForeignKey);
 
     const subCategoryForeignKey = new TableForeignKey({
-      columnNames: ['subCategory'],
+      columnNames: ['sub_category'],
       referencedColumnNames: ['id'],
       referencedTableName: 'categories',
       onDelete: 'CASCADE',
