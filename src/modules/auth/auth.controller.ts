@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   HttpCode,
@@ -13,6 +14,7 @@ import { LoginDto } from './dtos/login.dto';
 import { ForgotPasswordDto } from './dtos/forgot-password.dto';
 import { CreateUserDto } from '../user/dtos/create-user.dto';
 import { UserRepository } from '../user/user.repository';
+import { ResetPasswordDto } from '../auth/dtos/reset-password.dto';
 
 @Controller('auth')
 @ApiTags('auth')
@@ -48,5 +50,10 @@ export class AuthController {
   @Post('/forgot-password')
   async sendMail(@Body() forgotPasswordDto: ForgotPasswordDto) {
     return await this.authService.sendMail(forgotPasswordDto);
+  }
+
+  @Post('/reset-password')
+  async resetPassword(@Body() resetPasswordDto: ResetPasswordDto) {
+    return this.authService.resetPassword(resetPasswordDto);
   }
 }

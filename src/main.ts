@@ -15,7 +15,12 @@ async function bootstrap() {
   });
   app.setViewEngine('hbs');
   app.setGlobalPrefix('api', {
-    exclude: ['auth/login', 'auth/register', 'auth/forgot-password'],
+    exclude: [
+      'auth/login',
+      'auth/register',
+      'auth/forgot-password',
+      'auth/reset-password',
+    ],
   });
   setupSwagger(app);
   app.useGlobalFilters(new GlobalExceptionFilter());

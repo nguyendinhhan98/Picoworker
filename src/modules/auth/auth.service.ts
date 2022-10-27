@@ -1,6 +1,11 @@
 import { UserEntity } from '../user/user.entity';
 import * as bcrypt from 'bcrypt';
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UserRepository } from '../user/user.repository';
 import { MailService } from '../mail/mail.service';
@@ -48,10 +53,22 @@ export class AuthService {
     const user = await this.userRepository.getUserByEmail(body.email);
     const new_token = await this.jwtService.signAsync({
       email: user.email,
-      password: user.password,
       id: user.id,
     });
 
     await this.mailService.sendUserConfirmation(user, new_token);
+  }
+
+  async resetPassword(body: { token: string; newPassword: string }) {
+    try {
+      const user = await this.jwtService.verify(body.token);
+      if (!user) throw new NotFoundException('Người dùng không tồn tại!');
+      await this.userRepository.resetPassword(user.id, body.newPassword);
+      return {
+        message: 'change password successfully',
+      };
+    } catch (e) {
+      throw new BadRequestException(e);
+    }
   }
 }
