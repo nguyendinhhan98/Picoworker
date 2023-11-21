@@ -33,10 +33,10 @@ export enum SortOrder {
 export enum TargetZone {
   INTERNATIONAL = 'International',
   ASIA = 'Asia',
-  USA_WESTERN = 'USA & Western',
+  USA_WESTERN = 'USA Western',
   AFRICA = 'Africa',
   EUROPE_WEST = 'Europe West',
   MUSLIM_COUNTRIES = 'Muslim Countries',
   EUROPE_EAST = 'Europe East',
-  LATIN_AMERICA = 'Latin_America',
+  LATIN_AMERICA = 'Latin America',
 }
