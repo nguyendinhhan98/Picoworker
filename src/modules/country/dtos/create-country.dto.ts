@@ -22,6 +22,6 @@ export class CreateCountryDto {
   @IsArray()
   @ArrayMinSize(1)
   @IsEnum(TargetZone, { each: true })
-  @ApiProperty({ type: String })
+  @ApiProperty({ type: [TargetZone] })
   targetZone: TargetZone[];
 }
